@@ -28,7 +28,9 @@ def test(d:str) -> str:
         .expect("Module code should be loaded");
 
         let fn_test = module.getattr("test").expect("test should be there");
-        println!("{:?}", fn_test);
+        
+		
+		
         let result_value: String = fn_test
             .call1(("asdf",))
             .expect("result expected")
