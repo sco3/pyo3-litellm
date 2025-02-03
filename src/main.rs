@@ -47,8 +47,10 @@ def test(d:list) -> list:
         let r = fn_test //
             .call1((msgs,));
 
-        if let Ok(dict) = r {
-            println!("dict: {}", dict);
+        if let Ok(r) = r {
+            if let Ok(dict) = r.downcast::<PyDict>() {
+                println!("dict! {:?}", dict);
+            }
         }
     });
 }
