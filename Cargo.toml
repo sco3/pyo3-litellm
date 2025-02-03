@@ -7,3 +7,12 @@ edition = "2021"
 common_macros = "0.1.1"
 pyo3 = "0.23.4"
 pyo3-ffi = "0.23.4"
+serde_json = "1.0.138"
+tokio = { version = "1.43.0", features = ["full"] }
+
+
+[[bin]]
+name = "pyo3"
+path = "src/main.rs"
+
+

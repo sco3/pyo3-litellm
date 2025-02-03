@@ -1,7 +1,7 @@
 use common_macros::hash_map;
 use pyo3::prelude::*;
+use pyo3::types::PyDict;
 use pyo3_ffi::c_str;
-use std::collections::HashMap;
 
 fn main() {
     pyo3::prepare_freethreaded_python();
@@ -13,13 +13,7 @@ import sys
 print (sys.version)
 	
 def test(d:list) -> list:
-    #print (d)
-	
-    for entry in d:
-        print ("e")
-	
-    d.append({"a":"b"})
-    return d
+    return {"a":1}
 	
 "#
     );
@@ -50,12 +44,11 @@ def test(d:list) -> list:
             .getattr("test")
             .expect("test should be there");
 
-        let result_value: Vec<HashMap<String, String>> = fn_test
-            .call1((msgs,))
-            .expect("result expected")
-            .extract()
-            .expect("value expected");
+        let r = fn_test //
+            .call1((msgs,));
 
-        println!("{:?}", result_value)
+        if let Ok(dict) = r {
+            println!("dict: {}", dict);
+        }
     });
 }
