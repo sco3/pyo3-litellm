@@ -1,0 +1,9 @@
+[project]
+name = "pyo3-litellm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "litellm[proxy]>=1.60.0",
+]
