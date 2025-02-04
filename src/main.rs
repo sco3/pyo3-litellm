@@ -2,8 +2,8 @@ use common_macros::hash_map;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::types::PyInt;
-use pyo3::types::PyString;
-use pyo3::types::PyTuple;
+//use pyo3::types::PyString;
+//use pyo3::types::PyTuple;
 use pyo3_ffi::c_str;
 use std::time::Instant;
 
@@ -34,7 +34,7 @@ def test(d:list) -> list:
     ];
 
     println!("{:?}", msgs);
-
+    let start = Instant::now();
     Python::with_gil(|py| {
         let module = PyModule::from_code(
             py, //
@@ -50,31 +50,40 @@ def test(d:list) -> list:
 
         let r = fn_test //
             .call1((msgs,));
-        let start = Instant::now();
+
         if let Ok(r) = r {
             if let Ok(dict) = r.downcast::<PyDict>() {
                 println!("dict! {}", dict);
-                println!("items: {}", dict.items());
-                for item in dict.items() {
-                    println!("item: {}", item.get_type());
-                    if let Ok(tuple) = item.downcast::<PyTuple>() {
-                        println!("tuple: {}", tuple);
-                        for idx in 0..tuple.len() {
-                            let v = tuple.get_item(idx);
-                            println!("value{}: {:?}", idx, v);
-                            if let Ok(v) = v {
-                                if let Ok(s) = v.downcast::<PyString>() {
-                                    println!("str{}: {}", idx, s);
-                                }
-                                if let Ok(i) = v.downcast::<PyInt>() {
-                                    println!("str{}: {}", idx, i);
-                                }
+                if let Ok(a_value) = dict.get_item("a") {
+                    if let Some(a_value) = a_value {
+                        if let Ok(a_value) = a_value.downcast::<PyInt>() {
+                            if let Ok(i_value) = a_value.extract::<i32>() {
+                                println!("a: {}", i_value);
                             }
                         }
                     }
                 }
+
+                //                println!("items: {}", dict.items());
+                //                for item in dict.items() {
+                //                    println!("item: {}", item.get_type());
+                //                    if let Ok(tuple) = item.downcast::<PyTuple>() {
+                //                        println!("tuple: {}", tuple);
+                //                        for idx in 0..tuple.len() {
+                //                            let v = tuple.get_item(idx);
+                //                            if let Ok(v) = v {
+                //                                if let Ok(s) = v.downcast::<PyString>() {
+                //                                    println!("str{}: {}", idx, s);
+                //                                }
+                //                                if let Ok(i) = v.downcast::<PyInt>() {
+                //                                    println!("str{}: {}", idx, i);
+                //                                }
+                //                            }
+                //                        }
+                //                    }
+                //                }
             }
         }
-        println!("Time: {} mks", start.elapsed().as_micros());
     });
+    println!("Time: {} mks", start.elapsed().as_micros());
 }
